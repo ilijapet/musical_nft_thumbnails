@@ -11,12 +11,9 @@ env_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(env_file):
     # read a local .env file
     env.read_env(env_file)
-    # password = os.environ.get("MYSQL_PASSWORD")
-    password = env("POTGRESSQL_PASSWORD")
+    password = env("DENIS_PASS")
 else:
-    raise ValueError("We canot find .env file")
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+    raise ValueError("We cannot find .env file")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-#!!l7=be79=9h#ng$+l4mgxp$p6n7^boxvqnd!(x8vxx)##+4m"
@@ -54,7 +51,7 @@ ROOT_URLCONF = "musical_nft.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -75,8 +72,12 @@ WSGI_APPLICATION = "musical_nft.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "musical_nfts",
+        "USER": "denisdb",
+        "PASSWORD": password,
+        "HOST": "localhost",
+        "PORT": "",
     }
 }
 

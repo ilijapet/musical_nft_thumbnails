@@ -120,9 +120,10 @@ views will handle the call. Read and write from sql database. Communicate with o
 
 ### Installing postgres database
 
-This postgres installation procedure is written for WLS environment and it will presume that you already have WSL installed on your machine. If that's not the case go fist to WSL documentation and ones you successfully finish installation process you can continue from this point. 
+Postgres installation procedure is written for WLS environment and it will presume that you already have WSL installed on your machine. If that's not the case go first to WSL documentation. (If you want to check if you have WSL already installed just can go to windows command line and type `wsl -l -v`)
 
-(If you want to check if you have WSL already installed just can go to windows command line and type `wsl -l -v`)
+
+Installation from Linux terminal
 ```
 $ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
  
@@ -137,14 +138,15 @@ psql (PostgreSQL) 15.2 (Ubuntu 15.2-1.pgdg22.04+1)
  
 $ sudo service postgresql status
 15/main (port 5432): down
- 
+
+#starting server 
 $ sudo service postgresql start
  * Starting PostgreSQL 15 database server
 ```
 
-### Starting new Django project and adding postgres to our settings file
+### Starting new Django project and adding postgres to our settings.py file
 
-Let's first install Django
+Let's first install Django from virtual environment
 
     $ pip install django
     # update requirments
@@ -163,14 +165,14 @@ Now we will create new project in root directory `musical_nft_thumbnails`
 
 Now project root folder should look something like this:
 
-    ├── README.md
+    
     ├── env
     ├── manage.py
     ├── musical_nft
     └── requirements.txt
 
 
-In attempt to test django and everything worked as expected we should
+In attempt to test Django and if everything worked as expected we should
 
     $python manage.py runserver
 
@@ -197,20 +199,27 @@ If everything goes well we should see something like
     * Starting PostgreSQL 15 database server [ OK ] 
     * Starting PostgreSQL 9.1 database server 
 
-    # create user
-    $ sudo -u postgres denis
-
-    # create database
-    $sudo -u postgres createdb muscial_nft_db
-    
-    # now lets go to postgres command line and give password to user 
+    # now lets go to postgres command line and create user with password and give premisions to newly created user  
     $sudo -u postgres psql
     psql (15.4 (Ubuntu 15.4-1.pgdg20.04+1))
     Type "help" for help.
-    postgres=# alter user denis with encrypted password 'testpassword';
-    # grant all privileges to newly created database to user denis
-    postgres=# grant all privileges on database muscial_nft_db to denis
 
+    # create database
+    postgres=#create database musical_nfts;
+
+    # create user
+    postgres=# create user denisdb with encrypted password 'testpassword';
+    
+    # grant all privileges to newly created database to user denisdb
+    postgres=# grant all privileges on database musical_nfts to denisdb;
+
+    # change database ownership to avoid problem when executing migratations in Django 
+    postgres=# ALTER DATABASE musical_nfts OWNER TO denisdb;
+
+Exit postgres comand line and install Python package `psycopg2` (Psycopg is the most popular PostgreSQL database adapter for the Python programming language)
+
+    $pip install psycopg2
+    $pip freeze > requirements.txt
 
 Before we move to `settings.py` let's install `django-environ` library for
 managing environment variables in our project.
@@ -218,17 +227,127 @@ managing environment variables in our project.
     $pip install django-environ
     $pip freeze > requirements.txt
 
-Create `.env` in our root directory and write
+In root folder create file `.env` and write inside:
 
     DENIS_PASS=testpassword
 
-Add `.env` file to our `.gitignore` 
+Add `.env` to our `.gitignore` file.
 
     env/
     .env
 
 
-Inside `musical_nft` you should be able to find and open `settings.py`
+Inside `musical_nft` folder you should now be able to find and open `settings.py`
+
+On the top of Django `settings.py` file, above security variable you can pass:
+
+    from pathlib import Path
+    import os
+    import environ
+
+    # Build paths inside the project like this: BASE_DIR / 'subdir'.
+    BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+    env = environ.Env()
+    env_file = os.path.join(BASE_DIR, ".env")
+    if os.path.isfile(env_file):
+        # read a local .env file
+        env.read_env(env_file)
+        password = env("DENIS_PASS")
+    else:
+        raise ValueError("We cannot find .env file")
+    
+    SECRET_KEY = "django-insecure-#!!l7=be79=9h#ng$+l4mgxp$p6n7^boxvqnd!(x8vxx)##+4m"
+
+
+Then over database setting inside Django `settings.py` you can pass
+
+    DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "musical_nfts",
+        "USER": "denisdb",
+        "PASSWORD": password,
+        "HOST": "localhost",
+        "PORT": "",
+    }
+}
+
+
+When you run your Django you should see something like this
+
+    $python manage.py runserver
+    Watching for file changes with StatReloader
+    Performing system checks...
+
+    System check identified no issues (0 silenced).
+
+    You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+    Run 'python manage.py migrate' to apply them.
+    September 22, 2023 - 00:41:37
+    Django version 4.2.5, using settings 'musical_nft.settings'
+    Starting development server at http://127.0.0.1:8000/
+    Quit the server with CONTROL-C.
+
+
+ 
+Django comes with some pre-coded models that we need to migrate even if we didn't add neither one app model. That is why now is time to make Django migrations and to erase error we got above: 
+`    You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+    Run 'python manage.py migrate' to apply them.
+`
+
+
+    $python manage.py makemigrations
+    $python manage.py migrate
+
+    Operations to perform:
+    Apply all migrations: admin, auth, contenttypes, sessions
+    Running migrations:
+    Applying contenttypes.0001_initial... OK
+    Applying auth.0001_initial... OK
+    Applying admin.0001_initial... OK
+    Applying admin.0002_logentry_remove_auto_add... OK
+    Applying admin.0003_logentry_add_action_flag_choices... OK
+    Applying contenttypes.0002_remove_content_type_name... OK
+    Applying auth.0002_alter_permission_name_max_length... OK
+    Applying auth.0003_alter_user_email_max_length... OK
+    Applying auth.0004_alter_user_username_opts... OK
+    Applying auth.0005_alter_user_last_login_null... OK
+    Applying auth.0006_require_contenttypes_0002... OK
+    Applying auth.0007_alter_validators_add_error_messages... OK
+    Applying auth.0008_alter_user_username_max_length... OK
+    Applying auth.0009_alter_user_last_name_max_length... OK
+    Applying auth.0010_alter_group_name_max_length... OK
+    Applying auth.0011_update_proxy_permissions... OK
+    Applying auth.0012_alter_user_first_name_max_length... OK
+    Applying sessions.0001_initial... OK
+    
+
+At this point we can start to build our backend.
+
+
+
+
+Create `templates` folder in your root folder where we will put some of ours general html templates
+
+    $md templates
+
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
 
@@ -247,8 +366,7 @@ Inside `musical_nft` you should be able to find and open `settings.py`
 
 
 
-
-
+# TODO: add to template settings os.path.join(BASE_DIR, "templates") + make dir
 
 
 
