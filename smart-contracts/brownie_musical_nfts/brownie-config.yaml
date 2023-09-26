@@ -1,0 +1,15 @@
+dotenv: .env
+networks:
+    development:
+        cmd_settings:
+            accounts: 20
+            mnemonic: ${MNEMONIC}
+            default_balance: 200
+
+compiler:
+  solc:
+    version: 0.8.13
+
+
+wallets:
+  from_key: ${PRIVATE_KEY}
