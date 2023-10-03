@@ -793,6 +793,7 @@ Then in `deploy.py` you can write
 It is time to deploy to local development blockchain just to check if everything went well. We will run our deployment script with `-i` flag which will allow us to go to interactive mode and play with our contracts
 
     $brownie run deploy.py -i
+    
     Brownie v1.19.3 - Python development framework for Ethereum
 
     BrownieMusicalNftsProject is the active project.
@@ -1005,5 +1006,159 @@ In this moment we have our smart-cntracts writen, tested and deployed. Next step
 
 # Web3 backend and smart contract development for Python developers Musical NFTs part 8: Django backend 
 
+
+Now we will move to Django backend part. First step is to activate proper Python virtual enviroment. From `./musical_nft_thumbnails` folder 
+
+    $source env/bin/activate
+
+
+What we need at this point is landing page. Login, logout, sign-up functionality as well as reset password. Ones user sign-up and login into our platform we will redirect him/her to his personal page. There he will be able to see his personal information, NFTs he own, to buy new NFT with crypto or credit card.  
+
+Create new app `authentication`
+
+    $py manage.py startapp authentication 
+
+In this newly created app we will manage signin process, login, logout and reset password. 
+
+Add to `musical_nft/settings.py` `authentication` to list of apps:
+
+    INSTALLED_APPS = [
+        "django.contrib.admin",
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.sessions",
+        "django.contrib.messages",
+        "django.contrib.staticfiles",
+        "authentication",
+]
+
+
+Now in global `urls.py` inside `musical_nft/settings.py` add 
+
+    from django.contrib import admin
+    from django.urls import path, include
+
+    urlpatterns = [
+        path("admin/", admin.site.urls),
+        path("", include("authentication.urls"))
+    ]
+
+
+In authentication app folder create another `urls.py` and pass following code
+
+    from django.urls import path
+
+    from .views import HomeView
+
+    urlpatterns = [
+        path("", HomeView.as_view(), name="home"),
+    ]
+
+In this moment we need `HomeView` class and some html page to be rendered as home page. Have on mind when you create Django apps that it is always 3 step process: defining urls (global and per app with include), views (in our case class based view. it can easly be function based view if you like to experiment with alternative implementations of this code) and templates (html page to be rendered). 
+
+
+Inside `views.py` file in `authentication` app add following code:
+
+
+    from django.shortcuts import render
+    from django.views.generic import TemplateView
+
+    class HomeView(TemplateView):
+
+        def get(self, request):
+            return render(request, "home.html", {})
+                
+
+Only for test purpose lets make simple `home.html` file with message to be displayed in browser. For this to happen create in `muscial_nft_thumbnails` `home.html`
+
+    
+    {% extends "base.html" %}
+
+    {% block content%}
+        <h1> Test screen </h1>
+    {% endblock content%}
+
+
+This curly brackets above are part Django syntax we need to use with our templates
+
+Then in `settings.py` add 
+
+    TEMPLATES = [
+        {
+            "BACKEND": "django.template.backends.django.DjangoTemplates",
+            "DIRS": [os.path.join(BASE_DIR, "templates")],
+            "APP_DIRS": True,
+            "OPTIONS": {
+                "context_processors": [
+                    "django.template.context_processors.debug",
+                    "django.template.context_processors.request",
+                    "django.contrib.auth.context_processors.auth",
+                    "django.contrib.messages.context_processors.messages",
+                ],
+            },
+        },
+    ]
+
+
+
+In this project we will use [bootstrap](https://getbootstrap.com/) for styling. Go in their documentation and pick up from introduction second option nuber two, `Include Bootstrap’s CSS and JS.` and pass that code in newly created `base.html` inside project root `./templates` folder (or you can simply copy from here)
+
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Muscial NFT</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container ">       
+            <br/>
+            <br/>
+            {% block content %}
+            {% endblock content %}
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    </body>
+    </html>
+
+
+And from root directory 
+
+    $py manage.py runserver
+    
+Go to browser to `http://127.0.0.1:800` and check if you get proper message displayed
+
+If you see message `test screen` then we can move forward with adding navbar to our base `hmtl` page. We can do this by simple going again to `bootstrap` site documentation and search  for `navbar` in `components`. Choose one you like the most. For us first will be ok. Here is edited code that you need to pass to `navbar.html` file inside `./templates` folder in project root directoy. 
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'home' %}">Musical NFT </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+And then just go to `base.html` and add one new line bellow first body tag
+
+        {% include "navbar.html"%}
+
+Now if you go back to you browser you should see somethin like this
+
+![navbar](./photos/navbar.png)
+
+
+Ones we have this we can move to adding some basic sigin, login, logout and reset password functionality. For login and logout we will use Django authentication system. 
 
 

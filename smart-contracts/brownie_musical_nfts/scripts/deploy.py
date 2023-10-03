@@ -6,6 +6,8 @@ from scripts.helpers import get_account
 
 
 def main():
+    initial_supply = 1000
     accountOne, accountTwo = get_account()
-    mockDeployed = MockUSDC.deploy({"from": accountOne})
+    print(accountOne,accountTwo)
+    mockDeployed = MockUSDC.deploy(initial_supply, {"from": accountOne})
     musciNFTdeployed = MusicNFT.deploy(mockDeployed, 5, {"from": accountOne})
