@@ -11,15 +11,15 @@
     <br/>
     <form method="POST" action="{% url 'home' %}"> 
         {% csrf_token %}
-        <form>
+        
             <div class="mb-3">
               <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Username" name="username" required>
             </div>
             <div class="mb-3">
               <input type="password" class="form-control" placeholder="Password" name="password" required>
             </div>
-            <button type="submit" class="btn btn-secondary">Submit</button>
-          </form>
+            <button type="submit" class="btn btn-secondary">Login</button>
+        
         </form> 
 </div>
 
