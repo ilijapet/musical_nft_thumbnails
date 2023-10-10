@@ -54,21 +54,23 @@ contract MusicNFT is ERC721, ERC721URIStorage, Ownable {
         require(USDC.allowance(msg.sender, address(this)) >= NFTPriceInUSDC * nftCount, "You haven't approved this contract to spend enough of your USDC to pay for the Track Pack NFT(s).");
         // If everything goes ok then make MockUSDC tokens transfer from user account to this contract
         USDC.transferFrom(msg.sender, address(this), NFTPriceInUSDC * nftCount);
-        // Take new NF token ID
-        uint256 tokenId = _tokenIdCounter.current();
-        // Increment counter
-        _tokenIdCounter.increment();
-        // Mint new token
-        _safeMint(msg.sender, tokenId);
-        // Set new token URI to token ID
-        _setTokenURI(tokenId, uri);
-        // Emit event about succesful minting
-        emit newNFTMinted(tokenId, msg.sender);
+        // Take new NFT token ID
+        for (uint256 x = 0; x < nftCount; x++) {
+            uint256 tokenId = _tokenIdCounter.current();
+            // Increment counter
+            _tokenIdCounter.increment();
+            // Mint new token
+            _safeMint(msg.sender, tokenId);
+            // Set new token URI to token ID
+            _setTokenURI(tokenId, uri);
+            // Emit event about succesful minting
+            emit newNFTMinted(tokenId, msg.sender);
+        }
     }
     
     // When credit card buyers buy new NFT we need to mint to custodial wallet. Same as beafore. Diffrence is: onnly owner can mint, 2. there is no need to pay in usdc
     // it is already done by credit card. 
-    function createNFT(address custodialWallet, string memory uri, uint256 nftCount) public onlyOwner {
+    function createNFT(address custodialWallet, string memory uri) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(custodialWallet, tokenId);
