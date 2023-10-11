@@ -1,3 +1,7 @@
 env/
 .env
 README_DEV.md
+.vscode/
+authentication/migrations/
+authentication/__pycache__/
+.hypothesis/
