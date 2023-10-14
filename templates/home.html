@@ -1,10 +1,6 @@
 {% extends "base.html" %}
-
 {% block content%}
-
-
 {% if user.is_authenticated %}
-
     {% if customer.type == "CRYPTO"%}
     <table class="table  table-hover">
       <thead class="table-dark">
@@ -13,7 +9,6 @@
           <th scope="col">Email</th>
           <th scope="col">Total no. NFTs</th>
           <th scope="col">Means of payment</th>
-          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -21,38 +16,71 @@
             <td> {{ customer.first_name }} {{ customer.last_name }} </td>
             <td> {{ customer.email }} </td>
             <td> {{ customer.total_no_of_nfts }} </td>
-            <td> {{ customer.type }} </td>
+            <td><form action="" method="post">
+              {%csrf_token%}
+              {{form.as_p}}
+              <input type="submit" value="Save" class="btn btn-secondary">
+          </form>
+            </td>         
           </tr>
         </tbody>
-      </table>
-      
-      
+      </table>      
+      {% for card in metadata%}
+      {% if forloop.counter0|divisibleby:3 %} <div class="row">{%  endif %}
+        <div class="card m-5 p-2" style="width: 18rem;">
+          {% load static %}
+          <img src="{% static 'nft/'%}{{card.cover_file_name}}"  class="card-img-top" alt="..." width="50" height="200"/>
+          <div class="card-body">
+            <h5 class="card-title">{{card.name}}</h5>
+            <br>
+            <p class="card-text">{{card.description}}</p>
+          </div>
+        </div>
+      {%  if forloop.counter|divisibleby:3 or forloop.last %}</div> {%  endif %}
       <br>
-      <h1> Records crypto.. </h1>
+      {% endfor %}
       {% else %}
-      
-      <table class="table table-striped">
-        <thead>
+      <table class="table  table-hover">
+        <thead class="table-dark">
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Total no. NFTs</th>
             <th scope="col">Means of payment</th>
-            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td> {{ customer.first_name }} {{ customer.last_name }} </td>
-            <td> {{ customer.email }} </td>
-            <td> {{ customer.total_no_of_nfts }} </td>
-            <td> {{ customer.type }} </td>
-        </tr>
-      </tbody>
-    </table>
-    <h1> Records credit card... <h1/>
+              <td> {{ customer.first_name }} {{ customer.last_name }} </td>
+              <td> {{ customer.email }} </td>
+              <td> {{ customer.total_no_of_nfts }} </td>
+              <td><form action="" method="post">
+                {%csrf_token%}
+                {{form.as_p}}
+                <input type="submit" value="Save" class="btn btn-secondary">
+            </form>
+              </td>         
+            </tr>
+          </tbody>
+        </table>        
+        {% for card in metadata%}
+        {% if forloop.counter0|divisibleby:3 %} <div class="row">{%  endif %}
+          <div class="card m-5 p-2" style="width: 18rem;">
+            {% load static %}
+            <img src="{% static 'nft/'%}{{card.cover_file_name}}"  class="card-img-top" alt="..." width="50" height="200"/>
+            <div class="card-body">
+              <h5 class="card-title">{{card.name}}</h5>
+              <br>
+              <p class="card-text">{{card.description}}</p>
+            </div>
+          </div>
+        {%  if forloop.counter|divisibleby:3 or forloop.last %}</div> {%  endif %}
+        <br>
+        {% endfor %}
+        <p> credit card </p>
     {% endif %}
     {% else %}
+    <div class="col-md-6 offset-md-3"> 
     <h1> Login </h1>
     <br/>
     <form method="POST" action="{% url 'home' %}"> 
@@ -64,8 +92,7 @@
               <input type="password" class="form-control" placeholder="Password" name="password" required>
             </div>
             <button type="submit" class="btn btn-secondary">Login</button>
-        
         </form> 
-
+      </div>
 {% endif %}
 {% endblock content%}

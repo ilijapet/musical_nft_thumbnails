@@ -2,6 +2,13 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
+class NFTMetadata(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=2000)
+    cover_file_name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return (f"{self.name}")
 
 class Customer(models.Model):
     
@@ -21,20 +28,14 @@ class Customer(models.Model):
     type = models.CharField( 
         max_length = 20, 
         choices = OPTIONS, 
-        default = 'CRYPTO'
+        # default="CRYPTO"
         ) 
     total_no_of_nfts = models.IntegerField(default=0)
     nft_ids = ArrayField(models.IntegerField(null=True, blank=True), null=True, blank=True) 
-    nft_metadata_ids = ArrayField(models.IntegerField(null=True, blank=True), null=True, blank=True) 
+    nft_metadata = models.ManyToManyField(NFTMetadata)
 
     def __str__(self):
         return (f"{self.first_name} {self.last_name}")
 
-    
 
-# class NFTMetadata(models.Model):
-    # attributes = 
-    # descrition = text
-    # external_link = url
-    # img = link to ipfs
-    # name = name
+
