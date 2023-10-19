@@ -55,7 +55,6 @@ class RegisterUser(TemplateView):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
-
             # Authenticate use and login
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']

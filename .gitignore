@@ -5,3 +5,4 @@ README_DEV.md
 authentication/migrations/
 authentication/__pycache__/
 .hypothesis/
+node_modules
