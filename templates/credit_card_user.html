@@ -14,7 +14,7 @@
           <td> {{ customer.total_no_of_nfts }} </td>
           <td><form action="" method="post">
             {%csrf_token%}
-            {{form.as_p}}
+            {{orderForm.as_p}}
             <input type="submit" value="Save" class="btn btn-secondary">
         </form>
           </td>         

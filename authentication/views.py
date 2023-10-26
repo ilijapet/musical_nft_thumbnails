@@ -24,9 +24,14 @@ class HomeView(TemplateView):
                     return redirect("home")  
             else:
                 user = Customer.objects.get(username=request.user)                
-                form = OrderForm(instance=user, data=request.POST)
-                if form.is_valid():
-                    form.save()
+                orderForm = OrderForm(instance=user, data=request.POST)
+                if orderForm.is_valid():
+                    orderForm.save()
+                    messages.success(request, "You successfully update payment method")
+                    return redirect("home")
+                if False: #pick up simple post from frontend 
+                    # here we should do web3 buy code
+                    # update User total number of NFT and new NFT ids field
                     messages.success(request, "You successfully update payment method")
                     return redirect("home")
                 messages.success(request, "There was an error in updating of your payment method")
@@ -38,8 +43,8 @@ class HomeView(TemplateView):
         name = str(request.user)
         customer = Customer.objects.get(username=name)
         nft_metadata = customer.nft_metadata.all()
-        form = OrderForm()
-        return render(request, "home.html", {"customer": customer, "form": form, "metadata": nft_metadata})
+        orderForm = OrderForm()
+        return render(request, "home.html", {"customer": customer, "orderForm": orderForm, "metadata": nft_metadata})
 
 class LogoutUser(TemplateView):    
     def get(self, request):

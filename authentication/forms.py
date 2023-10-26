@@ -45,3 +45,4 @@ class OrderForm(ModelForm):
     class Meta:
         model = Customer
         fields = ("type",)
+
