@@ -77,6 +77,7 @@ contract MusicNFT is ERC721, ERC721URIStorage, Ownable {
         _setTokenURI(tokenId, uri);
         emit newNFTMinted(tokenId, custodialWallet);
     }
+    
     // This function is used to set new NFT price if necessary
     function setNFTPrice(uint256 _newPrice) public onlyOwner {
         NFTPriceInUSDC = _newPrice;

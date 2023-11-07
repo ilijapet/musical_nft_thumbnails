@@ -18,14 +18,15 @@
             {%csrf_token%}
             {{orderForm.as_p}}
             <input type="submit" value="Save" class="btn btn-secondary">
-        </form>
-          </td>       
-          <td>
-            <form action="" method="post">
+          </form>
+        </td>
+        <td>
+          <form action="" method="post">
             {%csrf_token%}
-            {{form.as_p}}
-            <input type="submit" value="Save" class="btn btn-secondary">
-            </form>
+            <label for="NFT">Number of NFTs</label>
+            <input  type="text" id="NFT" ><br>
+          </form>
+          <input  onclick="buyNFT()" type="submit" value="Buy" class="btn btn-secondary">
           </td>             
           
         </tr>

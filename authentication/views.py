@@ -29,11 +29,11 @@ class HomeView(TemplateView):
                 orderForm.save()
                 messages.success(request, "You successfully update payment method")
                 return redirect("home")
-            if False:  # pick up simple post from frontend
-                # here we should do web3 buy code
-                # update User total number of NFT and new NFT ids field
-                messages.success(request, "You successfully update payment method")
-                return redirect("home")
+            # if False:  # pick up simple post from frontend
+            #     # here we should do web3 buy code
+            #     # update User total number of NFT and new NFT ids field
+            #     messages.success(request, "You successfully update payment method")
+            #     return redirect("home")
             messages.success(
                 request, "There was an error in updating of your payment method"
             )

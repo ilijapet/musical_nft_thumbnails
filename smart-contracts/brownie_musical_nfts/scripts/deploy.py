@@ -10,4 +10,4 @@ def main():
     accountOne, accountTwo = get_account()
     print(accountOne,accountTwo)
     mockDeployed = MockUSDC.deploy(initial_supply, {"from": accountOne})
-    musciNFTdeployed = MusicNFT.deploy(mockDeployed, 5, {"from": accountOne})
+    musciNFTdeployed = MusicNFT.deploy(mockDeployed, 1000, {"from": accountOne})
