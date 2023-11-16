@@ -888,9 +888,9 @@ buyNFT = async () => {
   const total_price = Number(price)*numberOfNFTS
 
   // 3. approve MusicNFT to transfer user MockTokens in total amount on contract 
-  await usdc_contract.approve(nft_contract_address, total_price)
+  approve_result = await usdc_contract.approve(nft_contract_address, total_price)
 
   
   // 4. finally call buyNFT function from MusicNFT contract to buy and mint new NFTs to user account
-  await nft_contract.buyNFT("uri://music_nft_token", numberOfNFTS)
+  buy_nft_result = await nft_contract.buyNFT("uri://music_nft_token", numberOfNFTS)
 }

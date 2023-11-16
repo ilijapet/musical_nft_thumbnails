@@ -21,6 +21,7 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
     username = models.CharField(max_length=50, blank=True)
+    eth_address = models.CharField(max_length=100, blank=True)
     email = models.EmailField(max_length=250, blank=True)
     type = models.CharField(
         max_length=20,
