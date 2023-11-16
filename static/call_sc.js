@@ -879,21 +879,18 @@ const usdc_contract = new ethers.Contract(mock_usdc_address, ABI_USDC, signer);
       
 
 buyNFT = async () => {
+  // 1. get value user pass to use from front-end about number of NFTs he would like to buy
   const numberOfNFTS = document.getElementById('NFT').value;
-  console.log(numberOfNFTS);
-  // 1. pick up what user pass as value
+  
+  // 2. get current price of NFT from our smart contract and caluclate total price to be payed
   const price = await nft_contract.NFTPriceInUSDC();
   console.log(Number(price)*numberOfNFTS);
-
-  // 2. calculate total price by first reading NFTprice and then multiplaying number of NFTs time price
   const total_price = Number(price)*numberOfNFTS
+
+  // 3. approve MusicNFT to transfer user MockTokens in total amount on contract 
   await usdc_contract.approve(nft_contract_address, total_price)
+
   
-  // 3. call buyNFT function from MusicNFT contract to buy and mint new NFT token
+  // 4. finally call buyNFT function from MusicNFT contract to buy and mint new NFTs to user account
   await nft_contract.buyNFT("uri://music_nft_token", numberOfNFTS)
-
-
-
-  console.log("you are out")
 }
-
