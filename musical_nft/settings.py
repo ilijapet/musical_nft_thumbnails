@@ -42,7 +42,7 @@ CELERY_ENABLE_UTC = True
 CELERY_BEAT_SCHEDULE = {
     'event_listener': {
         'task': 'authentication.tasks.event_listener',
-        'schedule': 5.0,  # Run every 15 seconds
+        'schedule': 5.0,  # Run every 5 seconds
     },
 }
 

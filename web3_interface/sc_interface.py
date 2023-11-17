@@ -29,16 +29,13 @@ class Interface(Contracts):
         
         
     def handle_event(self, event, event_template):
-        print("unutar handle eventa si")
         try:
             result = get_event_data(
                 self.codec, event_template._get_event_abi(), event
             )
-            print("ovo mora")
             return True, result
         except Exception as e:
             print(e)
-            print("bila je greska")
             return False, None
 
     def event(self):

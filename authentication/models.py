@@ -11,6 +11,11 @@ class NFTMetadata(models.Model):
         return f"{self.name}"
 
 
+def test_function():
+    return list()
+
+
+
 class Customer(models.Model):
     CRYPTO = "CRYPTO"
     CREDIT = "CREDIT"
@@ -30,9 +35,13 @@ class Customer(models.Model):
     )
     total_no_of_nfts = models.IntegerField(default=0)
     nft_ids = ArrayField(
-        models.IntegerField(null=True, blank=True), null=True, blank=True
+        models.IntegerField(null=True, blank=True), default=list
     )
+    
     nft_metadata = models.ManyToManyField(NFTMetadata)
+
+    def test_function():
+        return list()
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
