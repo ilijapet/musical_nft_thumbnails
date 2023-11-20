@@ -46,3 +46,7 @@ class OrderForm(ModelForm):
         model = Customer
         fields = ("type",)
 
+
+
+# class NoOfNFTsForm(ModelForm):
+#     number = forms.IntegerField(label="", widget=forms.NumberInput(attrs={'class':'form-control', 'placeholder': 'Number of NFTs'}), required=True)

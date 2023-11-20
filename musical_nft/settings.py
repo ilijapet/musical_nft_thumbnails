@@ -47,9 +47,6 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 
-
-
-
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -151,3 +148,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = "pk_test_51MybU0KtroSirNQXi4fuyC99SsypbcWbqLZtfYtGWTUmwTyoNkPaPvu7vy2twd5JjyzHTaL9EirWX7GsFJV3xFsj00xVvZo3C8" 
+STRIPE_ENDPOINT_SECRET=env("STRIPE_ENDPOINT")

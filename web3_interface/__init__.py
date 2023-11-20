@@ -6,6 +6,7 @@ abidir = os.path.dirname(os.path.abspath(__file__))
 
 
 def load_abi(name):
+    # filename = os.path.join(abidir, f"web3_interface/{name}.json")
     filename = os.path.join(abidir, f"{name}.json")
     return json.load(open(filename))
 
