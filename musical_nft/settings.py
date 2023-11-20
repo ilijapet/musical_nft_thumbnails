@@ -1,17 +1,12 @@
 from pathlib import Path
 import os
 import environ
-# celery realted imports
+from urllib.parse import urlparse
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-
-
-
-# celery -A musical_nft worker --loglevel=info
-# celery -A musical_nft beat --loglevel=info
 
 env = environ.Env()
 env_file = os.path.join(BASE_DIR, ".env")
@@ -23,7 +18,7 @@ else:
     raise ValueError("We cannot find .env file")
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-#!!l7=be79=9h#ng$+l4mgxp$p6n7^boxvqnd!(x8vxx)##+4m"
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -92,16 +87,18 @@ WSGI_APPLICATION = "musical_nft.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "musical_nfts",
-        "USER": "denisdb",
-        "PASSWORD": password,
-        "HOST": "localhost",
-        "PORT": "",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "musical_nfts",
+#         "USER": "denisdb",
+#         "PASSWORD": password,
+#         "HOST": "localhost",
+#         "PORT": "",
+#     }
+# }
+
+DATABASE = {'default': env.db()}
 
 
 # Password validation
@@ -149,6 +146,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
-STRIPE_PUBLISHABLE_KEY = "pk_test_51MybU0KtroSirNQXi4fuyC99SsypbcWbqLZtfYtGWTUmwTyoNkPaPvu7vy2twd5JjyzHTaL9EirWX7GsFJV3xFsj00xVvZo3C8" 
-STRIPE_ENDPOINT_SECRET=env("STRIPE_ENDPOINT")
+
+
