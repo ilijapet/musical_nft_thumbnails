@@ -161,22 +161,24 @@ def stripe_webhook(request):
     if event['type'] == 'checkout.session.completed':
         # Mint new NFT
         result = contract_interface.mint_nft("ipfs://uri.test")
-        print(result)
         suc, result = contract_interface.event()
         if suc:
             try:        
                 c1 = Customer.objects.get(eth_address=result.args.owner)
                 if result.args.numberOfNFT not in c1.nft_ids:
-                    # update user db
+                    # update custodial wallet information db
                     c1.nft_ids.append(result.args.numberOfNFT)
                     c1.total_no_of_nfts += 1
                     c1.save()
-                    # record also to user's database
+                    # update customer db
+                    user = event["data"]["object"]["customer_details"]["name"]
+                    name, last = user.split()
+                    c2 = Customer.objects.get(first_name=name, last_name=last)
+                    c2.nft_ids.append(result.args.numberOfNFT)
+                    c2.total_no_of_nfts += 1         
+                    c2.save()            
             except Exception as e:
                 print (e)
-            # TODO: listen for event
-            # update databse
-
     return HttpResponse(status=200)
     
 
