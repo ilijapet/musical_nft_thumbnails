@@ -1,8 +1,6 @@
-# app.yaml
-
-runtime: python39
+runtime: python38
 env: standard
-entrypoint: gunicorn -b :$PORT core.wsgi:application
+entrypoint: gunicorn -b :$PORT musical_nft.wsgi:application
 
 handlers:
 - url: /.*
