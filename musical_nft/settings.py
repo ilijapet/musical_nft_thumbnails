@@ -23,7 +23,7 @@ else:
     raise ValueError("We cannot find .env file")
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-#!!l7=be79=9h#ng$+l4mgxp$p6n7^boxvqnd!(x8vxx)##+4m"
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
