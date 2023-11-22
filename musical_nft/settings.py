@@ -4,6 +4,7 @@ import environ
 from urllib.parse import urlparse
 import io
 from google.cloud import secretmanager
+from google.oauth2 import service_account
 
 
 
@@ -27,7 +28,6 @@ elif os.environ.get('GOOGLE_CLOUD_PROJECT', None):
     settings_name = os.environ.get('SETTINGS_NAME', 'django_settings')
     name = f'projects/{project_id}/secrets/{settings_name}/versions/latest'
     payload = client.access_secret_version(name=name).payload.data.decode('UTF-8')
-
     env.read_env(io.StringIO(payload))
 else:
     raise Exception('No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.')
@@ -46,7 +46,7 @@ if APPENGINE_URL:
 
     ALLOWED_HOSTS = [urlparse(APPENGINE_URL).netloc]
     CSRF_TRUSTED_ORIGINS = [APPENGINE_URL]
-    SECURE_SSL_REDIRECT = True
+    # SECURE_SSL_REDIRECT = True
 else:
     ALLOWED_HOSTS = ['*']
 
@@ -163,10 +163,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -174,4 +174,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    os.path.join(BASE_DIR, 'musicnft-credentials.json')
+)
 
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = env('GS_BUCKET_NAME')

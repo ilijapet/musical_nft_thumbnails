@@ -6,3 +6,4 @@ authentication/migrations/
 authentication/__pycache__/
 .hypothesis/
 node_modules
+musicnft-credentials.json
