@@ -97,7 +97,7 @@ class CreateCheckoutSession(TemplateView): # new
     def get(self, request):
         number_of_nfts = request.GET.get("number")
         print(number_of_nfts)
-        domain_url = 'http://localhost:8000/'
+        domain_url = 'https://musicnft-405811.ew.r.appspot.com/'
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
             # Create new Checkout Session for the order

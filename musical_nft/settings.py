@@ -181,3 +181,8 @@ GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = env('GS_BUCKET_NAME')
+
+
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = "pk_test_51MybU0KtroSirNQXi4fuyC99SsypbcWbqLZtfYtGWTUmwTyoNkPaPvu7vy2twd5JjyzHTaL9EirWX7GsFJV3xFsj00xVvZo3C8" 
+STRIPE_ENDPOINT_SECRET=env("STRIPE_ENDPOINT")
