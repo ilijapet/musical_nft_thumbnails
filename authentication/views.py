@@ -96,9 +96,9 @@ class CreateCheckoutSession(TemplateView): # new
     @csrf_exempt
     def get(self, request):
         number_of_nfts = request.GET.get("number")
-        print(number_of_nfts)
         domain_url = 'https://musicnft-405811.ew.r.appspot.com/'
         stripe.api_key = settings.STRIPE_SECRET_KEY
+        
         try:
             # Create new Checkout Session for the order
             # Other optional params include:
@@ -145,11 +145,11 @@ def stripe_webhook(request):
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None
-
     try:
         event = stripe.Webhook.construct_event(
             payload, sig_header, endpoint_secret
         )
+
     except ValueError as e:
         # Invalid payload
         return HttpResponse(status=400)
