@@ -1,17 +1,12 @@
 from pathlib import Path
 import os
 import environ
+
 # celery realted imports
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-
-
-
-# celery -A musical_nft worker --loglevel=info
-# celery -A musical_nft beat --loglevel=info
 
 env = environ.Env()
 env_file = os.path.join(BASE_DIR, ".env")
@@ -32,17 +27,17 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Celery settings
-CELERY_BROKER_URL = 'pyamqp://guest@localhost//'
-CELERY_RESULT_BACKEND = 'rpc://'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TIMEZONE = 'UTC'
+CELERY_BROKER_URL = "pyamqp://guest@localhost//"
+CELERY_RESULT_BACKEND = "rpc://"
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TIMEZONE = "UTC"
 CELERY_ENABLE_UTC = True
 CELERY_BEAT_SCHEDULE = {
-    'event_listener': {
-        'task': 'authentication.tasks.event_listener',
-        'schedule': 5.0,  # Run every 5 seconds
+    "event_listener": {
+        "task": "authentication.tasks.event_listener",
+        "schedule": 5.0,  # Run every 5 seconds
     },
 }
 
@@ -139,10 +134,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -150,5 +143,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
-STRIPE_PUBLISHABLE_KEY = "pk_test_51MybU0KtroSirNQXi4fuyC99SsypbcWbqLZtfYtGWTUmwTyoNkPaPvu7vy2twd5JjyzHTaL9EirWX7GsFJV3xFsj00xVvZo3C8" 
-STRIPE_ENDPOINT_SECRET=env("STRIPE_ENDPOINT")
+STRIPE_PUBLISHABLE_KEY = "pk_test_51MybU0KtroSirNQXi4fuyC99SsypbcWbqLZtfYtGWTUmwTyoNkPaPvu7vy2twd5JjyzHTaL9EirWX7GsFJV3xFsj00xVvZo3C8"
+STRIPE_ENDPOINT_SECRET = env("STRIPE_ENDPOINT")
